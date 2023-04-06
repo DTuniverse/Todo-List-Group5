@@ -1,5 +1,18 @@
+/* STYLE */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Yeseva+One&display=swap');
+
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 14px;
+    color: #2E4581;
+}
+h1 {
+    font-family: 'Yeseva One', cursive;
+}
+    
