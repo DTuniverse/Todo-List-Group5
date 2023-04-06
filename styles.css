@@ -1,18 +1,219 @@
 /* STYLE */
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Yeseva+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Yeseva+One&display=swap");
 
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+:root {
+  --btn-height: 3.25rem;
+}
+
+.theme-light {
+  --color-background-primary: #e4edef;
+  --color-font: #2e4581;
+  --color-font-opaque: #2e468170;
+  --color-borders: #b6d5dc;
+  --color-strike: #ff3131;
+}
+
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
 }
 
 body {
-    font-family: 'Quicksand', sans-serif;
-    font-size: 14px;
-    color: #2E4581;
+  font-family: "Quicksand", sans-serif;
+  font-size: 1.4rem;
+  color: var(--color-font);
+  background-color: var(--color-background-primary);
 }
 h1 {
-    font-family: 'Yeseva One', cursive;
+  font-family: "Yeseva One", cursive;
 }
-    
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+}
+
+.header label {
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  line-height: 3rem;
+  text-transform: lowercase;
+  font-weight: 700;
+  cursor: text;
+}
+
+.header label::before {
+  content: "\003c\00a0";
+}
+.header label::after {
+  content: "\00a0\003e";
+}
+
+.addSection {
+  margin: 2rem auto;
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  background-color: transparent;
+  border: none;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.btn img {
+  display: block;
+  height: var(--btn-height);
+  aspect-ratio: 1 / 1;
+  background-color: transparent;
+}
+
+#newTask {
+  height: var(--btn-height);
+  text-align: center;
+  color: var(--color-font);
+  font-weight: 700;
+  border: none;
+  outline: none;
+}
+
+#newTask::placeholder {
+  color: var(--color-font-opaque);
+}
+
+#newTask:focus-visible {
+  outline: 1px solid var(--color-font);
+  border-radius: 2px;
+}
+
+.todo-section {
+  min-height: 30vh;
+  width: 50%;
+  /* display: flex;
+  flex-direction: column;
+  align-items: stretch; */
+}
+
+@media only screen and (max-width: 650px) {
+  .todo-section {
+    min-height: 0;
+    width: 100%;
+  }
+}
+
+.todo-section h2 {
+  font-size: 2rem;
+  font-family: "Yeseva One", cursive;
+  margin: 2rem 0;
+}
+
+.list-item {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  /* font-weight: 700; */
+  font-size: 1.75rem;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.list-item::before {
+  content: "";
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  top: -2px;
+  background-color: var(--color-borders);
+}
+
+.list-item:last-of-type::after {
+  content: "";
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  background-color: var(--color-borders);
+  /* overflow-x: hidden; */
+}
+
+.check-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.todo-label {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.todo-label::before {
+  content: "";
+  position: absolute;
+  top: 55%;
+  height: 2px;
+  background-color: var(--color-strike);
+  width: 101%;
+  transform: translateX(-100%);
+  /* display: none; */
+  transition: transform 0.2s cubic-bezier(0, 1.15, 1, 0.78);
+}
+
+[type="checkbox"] {
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--color-font-opaque);
+  border-radius: 2px;
+  position: relative;
+}
+
+[type="checkbox"]:checked {
+  border: 2px solid var(--color-font-opaque);
+  transform: scale(1.2);
+}
+
+[type="checkbox"]:checked::after {
+  content: "\2713";
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.25rem;
+}
+
+[type="checkbox"]:checked + .todo-label::before {
+  display: block;
+  transform: translateX(0%);
+}
+
+.btn-clear img {
+  height: calc(var(--btn-height) * 2);
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.btn:active {
+  transform: translateY(2px);
+}
