@@ -1,52 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grp5 Todo</title>
     <link rel="stylesheet" href="styles.css"
-</head>
-<body>
+  </head>
+  <body class="theme-light">
     <div class="container">
-        <div class="wrapper"> 
+      <div class="header">
+        <h1>To Do List</h1>
+        <label contenteditable spellcheck="false">My Name Goes Here</label>
 
-            <div class="header">
-                <h1>To Do List</h1>
-                <label>My Name Goes Here</label>
-
-                <div class="addSection">
-                    <input type="text" id="newTask" placeholder="Add a To do" />
-                    <button id="addBtn">Add Task</button>
-                </div>
-            </div>
-
-            <div class="ongoingSection">
-                <h2>Doing</h2>
-                <ul id="incompleteTask">
-                    <li>
-                        <input type="checkbox">
-                        <label>Renovate the nursery room</label>
-                        <button id="editBtn">Edit</button>
-                        <button id="deleteBtn">Delete</button>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="completedSection">
-                <h2>Done</h2>
-                <ul id="doneTask">
-                    <li>
-                        <input type="checkbox" checked="">
-                        <label>Go surfing at the beach</label>
-                        <button class="editBtn">Edit</button>
-                        <button class="deleteBtn">Delete</button>
-                    </li>
-                </ul>
-            </div>
-
+        <div class="addSection">
+          <input type="text" id="newTask" placeholder="Add a To do" />
+          <button class="btn" id="addBtn">
+            <img src="./images/add_btn.png" alt="Add Button" />
+          </button>
         </div>
+      </div>
+
+      <div class="todo-section ongoingSection">
+        <h2>Doing</h2>
+        <ul id="incompleteTask">
+          <li class="list-item">
+            <div class="check-wrapper">
+              <input type="checkbox" />
+              <label class="todo-label">Renovate the nursery room</label>
+            </div>
+            <div>
+              <button class="btn editBtn">
+                <img src="./images/edit_btn.png" alt="Edit Button" />
+              </button>
+              <button class="btn deleteBtn">
+                <img src="./images/delete_btn.png" alt="Delete Button" />
+              </button>
+            </div>
+          </li>
+          <li class="list-item">
+            <div class="check-wrapper">
+              <input type="checkbox" />
+              <label class="todo-label">Renovate the nursery room</label>
+            </div>
+            <div>
+              <button class="btn editBtn">
+                <img src="./images/edit_btn.png" alt="Edit Button" />
+              </button>
+              <button class="btn deleteBtn">
+                <img src="./images/delete_btn.png" alt="Delete Button" />
+              </button>
+            </div>
+          </li>
+          <li class="list-item">
+            <div class="check-wrapper">
+              <input type="checkbox" />
+              <label class="todo-label">Renovate the nursery room</label>
+            </div>
+            <div>
+              <button class="btn editBtn">
+                <img src="./images/edit_btn.png" alt="Edit Button" />
+              </button>
+              <button class="btn deleteBtn">
+                <img src="./images/delete_btn.png" alt="Delete Button" />
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="todo-section completedSection">
+        <h2>Done</h2>
+        <ul id="doneTask">
+          <li class="list-item">
+            <div class="check-wrapper">
+              <input type="checkbox" checked="" />
+              <label class="todo-label">Go surfing at the beach</label>
+            </div>
+            <div>
+              <button class="btn editBtn">
+                <img src="./images/edit_btn.png" alt="Edit Button" />
+              </button>
+              <button class="btn deleteBtn">
+                <img src="./images/delete_btn.png" alt="Delete Button" />
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <button class="btn btn-clear">
+        <img src="./images/clear_btn.png" alt="Clear Memory Button" />
+      </button>
     </div>
-    
-</body>
+  </body>
 </html>
