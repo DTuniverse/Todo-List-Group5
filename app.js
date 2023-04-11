@@ -9,6 +9,7 @@ const incompleteTaskList = document.getElementById("incompleteTask");
 document.addEventListener(
   "DOMContentLoaded",
   function () {
+    
     loadTodos();
   },
   false
@@ -29,9 +30,9 @@ const loadTodos = () => {
 // eventlistener edit and delete button clicks
 
 document.body.addEventListener("click", (event) => {
+  
   if (
-    event.target.classList.contains("deleteBtn") ||
-    event.target.parentElement.classList.contains("deleteBtn")
+    event.target.closest(".deleteBtn")
   ) {
     deleteTodo(event);
   }
@@ -46,6 +47,7 @@ addButton.addEventListener("click", () => {
 //add todo function
 
 const addTodo = () => {
+  // console.log(todoInput.value)
   addTodoToHtml(todoInput.value);
   addTodoToLocalStorage(todoInput.value);
 };
@@ -86,6 +88,7 @@ const addTodoToHtml = (value) => {
 
   buttonWrapper.appendChild(editButton);
   buttonWrapper.appendChild(deleteButton);
+  
 
   let listItem = document.createElement("li");
   listItem.className = "list-item";
@@ -98,7 +101,8 @@ const addTodoToHtml = (value) => {
 //add todo to local storage only
 
 const addTodoToLocalStorage = (value) => {
-  let obj = { name: value };
+  
+  let obj = { name: value,checked:false};
 
   let todos = JSON.parse(window.localStorage.getItem("todos"));
 
@@ -114,22 +118,24 @@ const addTodoToLocalStorage = (value) => {
 // delete todo
 
 const deleteTodo = (event) => {
-  deleteTodoFromPage(event);
+  // deleteTodoFromPage(event);
   deleteTodoFromLocalStorage(event);
 };
 
 //delete todo from only page function
 
 const deleteTodoFromPage = (event) => {
-  event.target.parentElement.parentElement.parentElement.remove();
+
+  event.target.parentElement.parentElement.parentElement.remove()
+
 };
 
 //delete todo from only local storage
 
 const deleteTodoFromLocalStorage = (event) => {
+
   const deleteTodoName =
-    event.target.parentElement.parentElement.parentElement.childNodes[0]
-      .childNodes[1].textContent;
+    event.target.parentElement.parentElement.previousSibling.childNodes[1].textContent
 
   const todos = JSON.parse(window.localStorage.getItem("todos"));
 
