@@ -3,9 +3,12 @@
 const addButton = document.getElementById("addBtn");
 const todoInput = document.getElementById("newTask");
 const incompleteTaskList = document.getElementById("incompleteTask");
+const editIcon = document.getElementsByClassName("editImage");
 const doneTaskList = document.getElementById("doneTask");
 
 // execute loadtodos function after page loads
+
+// localStorage.removeItem("todos");
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -19,10 +22,12 @@ document.addEventListener(
 
 const loadTodos = () => {
   let todos = JSON.parse(window.localStorage.getItem("todos"));
+  console.log("storage:", todos); //ggl
 
   if (todos) {
     todos.forEach((todo) => {
-      addTodoToHtml(todo.name);
+      // addTodoToHtml(todo.name);
+      addTodoToHtml(todo);
     });
   }
 };
@@ -44,14 +49,16 @@ addButton.addEventListener("click", () => {
 //add todo function
 
 const addTodo = () => {
-  // console.log(todoInput.value)
-  addTodoToHtml(todoInput.value);
-  addTodoToLocalStorage(todoInput.value);
+  //  console.log(todoInput.value)
+  const newTodoObj = addTodoToLocalStorage(todoInput.value);
+  // addTodoToHtml(todoInput.value);
+  addTodoToHtml(newTodoObj);
+  // addTodoToLocalStorage(todoInput.value);
 };
 
 //add todo to html only
 
-const addTodoToHtml = (value, list = "incomplete") => {
+const addTodoToHtml = (newTodoObj, list = "incomplete") => {
   //   <li class="list-item">
   //     <div class="check-wrapper">
   //       <input type="checkbox" />
@@ -69,14 +76,14 @@ const addTodoToHtml = (value, list = "incomplete") => {
 
   let checkWrapper = document.createElement("div");
   checkWrapper.className = "check-wrapper";
-  checkWrapper.innerHTML = `<input type="checkbox" /><label class="todo-label">${value}</label>`;
+  checkWrapper.innerHTML = `<input type="checkbox" /><label class="todo-label">${newTodoObj.name}</label>`; //ggl
 
   let buttonWrapper = document.createElement("div");
 
   let editButton = document.createElement("button");
   editButton.className = "btn editBtn";
   editButton.innerHTML =
-    '<img src="./images/edit_btn.png" alt="Edit Button" />';
+    '<img src="./images/edit_btn.png" alt="Edit Button" class="editImage" />'; //ggl
 
   let deleteButton = document.createElement("button");
   deleteButton.className = "btn deleteBtn";
@@ -96,6 +103,7 @@ const addTodoToHtml = (value, list = "incomplete") => {
   listItem.appendChild(buttonWrapper);
 
   document.getElementById(`${list}Task`).appendChild(listItem);
+  bindTaskEvents(listItem, newTodoObj); //ggl
 
   listItem.addEventListener("dragstart", handleDragstart);
   list === "incomplete"
@@ -117,6 +125,8 @@ const addTodoToLocalStorage = (value) => {
   }
 
   window.localStorage.setItem("todos", JSON.stringify(todos));
+
+  return obj; //ggl
 };
 
 // delete todo
@@ -206,3 +216,46 @@ const drop = (event) => {
   list.addEventListener("dragover", (e) => dragover(e));
   list.addEventListener("drop", (e) => drop(e));
 });
+
+// BIND TASKS EVENTS        -GGL
+const bindTaskEvents = (listItem, todoObj) => {
+  // const checkBox = listItem.querySelector('input[type="checkbox"]');
+  // const deleteButton = listItem.querySelector("deleteBtn");
+  const editIcon = listItem.querySelector(".editImage");
+
+  editIcon.onclick = () => setToEditMode(listItem, todoObj);
+};
+
+const setToEditMode = (listItem, todoObj) => {
+  //const listItem = this.parentNode;
+  const label = listItem.querySelector("label");
+  label.setAttribute("contenteditable", "");
+
+  label.onblur = (event) => {
+    // console.log("blur called.", event);
+    label.removeAttribute("contenteditable");
+
+    const newValue = event.target.innerHTML;
+    // console.log("newVal:", newValue)
+    updateItemInLocalStorage(todoObj, newValue);
+  };
+};
+
+const updateItemInLocalStorage = (todoObj, newValue) => {
+  // read local storage into array
+  todoArray = loadData();
+
+  // find thing in array and update
+  index = todoArray.findIndex((el) => el.id === todoObj.id);
+  todoArray[index].name = newValue;
+
+  // save the array into local storage
+  saveData(todoArray);
+};
+
+// this function returns array of todos from local storage
+const loadData = () => JSON.parse(window.localStorage.getItem("todos"));
+
+const saveData = (todoArray) => {
+  window.localStorage.setItem("todos", JSON.stringify(todoArray));
+};
