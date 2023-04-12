@@ -4,8 +4,10 @@ const addButton = document.getElementById("addBtn");
 const todoInput = document.getElementById("newTask");
 const incompleteTaskList = document.getElementById("incompleteTask");
 const editIcon = document.getElementsByClassName("editImage");
-let todoArray = [];
+
 // execute loadtodos function after page loads
+
+// localStorage.removeItem("todos");
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -20,13 +22,12 @@ document.addEventListener(
 
 const loadTodos = () => {
   let todos = JSON.parse(window.localStorage.getItem("todos"));
-  console.log(todos)
+  console.log("storage:", todos)    //ggl
 
   if (todos) {
     todos.forEach((todo) => {
-      todoArray.push(newTodoItem(todo.name))
-      addTodoToHtml(todo.name);
-      console.log("todoArray:", todoArray)
+      // addTodoToHtml(todo.name);
+      addTodoToHtml(todo);
     });
   }
 };
@@ -51,15 +52,16 @@ addButton.addEventListener("click", () => {
 //add todo function
 
 const addTodo = () => {
-  console.log("add section:", todoInput)
 //  console.log(todoInput.value)
-  addTodoToHtml(todoInput.value);
-  addTodoToLocalStorage(todoInput.value);
+  const newTodoObj = addTodoToLocalStorage(todoInput.value);
+  // addTodoToHtml(todoInput.value);
+  addTodoToHtml(newTodoObj);
+  // addTodoToLocalStorage(todoInput.value);
 };
 
 //add todo to html only
 
-const addTodoToHtml = (value) => {
+const addTodoToHtml = (newTodoObj) => {
   //   <li class="list-item">
   //     <div class="check-wrapper">
   //       <input type="checkbox" />
@@ -77,14 +79,14 @@ const addTodoToHtml = (value) => {
 
   let checkWrapper = document.createElement("div");
   checkWrapper.className = "check-wrapper";
-  checkWrapper.innerHTML = `<input type="checkbox" /><label class="todo-label">${value}</label>`;
+  checkWrapper.innerHTML = `<input type="checkbox" /><label class="todo-label">${newTodoObj.name}</label>`;   //ggl
 
   let buttonWrapper = document.createElement("div");
 
   let editButton = document.createElement("button");
   editButton.className = "btn editBtn";
   editButton.innerHTML =
-    '<img src="./images/edit_btn.png" alt="Edit Button" class="editImage" />';
+    '<img src="./images/edit_btn.png" alt="Edit Button" class="editImage" />';       //ggl
 
   let deleteButton = document.createElement("button");
   deleteButton.className = "btn deleteBtn";
@@ -101,16 +103,14 @@ const addTodoToHtml = (value) => {
   listItem.appendChild(buttonWrapper);
 
   incompleteTaskList.appendChild(listItem);
-  bindTaskEvents(listItem);
-
-
+  bindTaskEvents(listItem, newTodoObj);     //ggl
 };
 
 //add todo to local storage only
 
 const addTodoToLocalStorage = (value) => {
   
-  let obj = { name: value,checked:false};
+  let obj = { name: value,checked:false, id:Date.now()};
 
   let todos = JSON.parse(window.localStorage.getItem("todos"));
 
@@ -122,27 +122,8 @@ const addTodoToLocalStorage = (value) => {
 
   window.localStorage.setItem("todos", JSON.stringify(todos));
 
-  // Store my Todo List in an Array
-  
-  // const todoItem = {
-  //   value,
-  //   checked: false,
-  //   id: Date.now(),
-  // };
-
-  todoArray.push(newTodoItem(value));
-  console.log(todoArray);
+  return obj    //ggl
 };
-
-// this function returns a new todo item object
-function newTodoItem(name) {
-  return {
-    name: name,
-    checked: false,
-    id: Date.now(),
-  };
-}
-
 
 // delete todo
 
@@ -173,45 +154,46 @@ const deleteTodoFromLocalStorage = (event) => {
   window.localStorage.setItem("todos", JSON.stringify(newTodos));
 };
 
-// EVENT LISTENER WHEN EDIT BUTTON IS CLICKED
-// editIcon.addEventListener("click", event => {
-//   console.log("Edit button clicked:", editIcon);
-// });
-
-const bindTaskEvents = (listItem) => {
-  console.log("li:", listItem);
-    const checkBox = listItem.querySelector('input[type="checkbox"]');
+// BIND TASKS EVENTS        -GGL
+const bindTaskEvents = (listItem, todoObj) => {
+    // const checkBox = listItem.querySelector('input[type="checkbox"]');
+    // const deleteButton = listItem.querySelector("deleteBtn");
     const editIcon = listItem.querySelector(".editImage");
-    console.log("edit button:", editIcon);
-    const deleteButton = listItem.querySelector("deleteBtn");
-    editIcon.onclick = () => setToEditMode(listItem);
 
- //   checkBox.onchange = checkBoxEventHandler;
+    editIcon.onclick = () => setToEditMode(listItem, todoObj);
 };
 
-const setToEditMode = (listItem) => {
+const setToEditMode = (listItem, todoObj) => {
   //const listItem = this.parentNode;
-  // const editInput = listItem.querySelector("input[type=text]");
-  let label = listItem.querySelector("label");
+  const label = listItem.querySelector("label");
   label.setAttribute("contenteditable", "");
-  console.log("editTask ran.", label);
 
-  label.onblur = () => {
-    console.log("blur called.");
+  label.onblur = (event) => {
+    // console.log("blur called.", event);
     label.removeAttribute("contenteditable")
+  
+    const newValue = event.target.innerHTML
+    // console.log("newVal:", newValue)
+    updateItemInLocalStorage(todoObj, newValue) 
   }; 
 
-
-
-
-  // let containsClass = listItem.classList.contains("editMode");
-
-  // if (containsClass) {
-  //     label.innerText = editInput.value;
-  // } else {
-  //     editInput.value = label.innerText;
-  // }
-
-  // listItem.classList.toggle("editMode");
-
 };
+
+const updateItemInLocalStorage = (todoObj, newValue) => {
+  // read local storage into array
+  todoArray = loadData()
+
+  // find thing in array and update
+  index = todoArray.findIndex(el => el.id === todoObj.id)
+  todoArray[index].name = newValue
+
+  // save the array into local storage
+  saveData(todoArray)
+}
+
+// this function returns array of todos from local storage
+const loadData = () =>  JSON.parse(window.localStorage.getItem("todos"))
+
+const saveData = todoArray => {
+  window.localStorage.setItem("todos", JSON.stringify(todoArray));
+}
