@@ -274,3 +274,22 @@ const loadData = () => JSON.parse(window.localStorage.getItem("todos"));
 const saveData = (todoArray) => {
   window.localStorage.setItem("todos", JSON.stringify(todoArray));
 };
+
+// DANIIL
+
+const myNameInput = document.getElementById("newNameInput");
+const saveNameGroup5 = () => {
+  let nameGroup5 = myNameInput.innerText;
+  window.localStorage.setItem("nameGroup5", nameGroup5);
+};
+myNameInput.addEventListener("mouseout", saveNameGroup5);
+if (
+  localStorage.nameGroup5 != "undefined" ||
+  localStorage.nameGroup5 != "null"
+) {
+  myNameInput.innerText = localStorage.nameGroup5;
+} else {
+  myNameInput.innerText = "my name goes here";
+}
+console.dir(myNameInput.innerText);
+// console.dir(localStorage.name);
