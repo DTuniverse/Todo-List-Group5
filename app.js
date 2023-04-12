@@ -168,9 +168,6 @@ const deleteTodoFromLocalStorage = (event) => {
 function handleDragstart(e) {
   e.dataTransfer.clearData();
   e.dataTransfer.setData("text/plain", e.target.textContent);
-
-  // e.dataTransfer.effectAllowed = "move";
-
   setTimeout(() => {
     e.target.classList.add("hide");
   }, 0);
@@ -197,17 +194,14 @@ const dragover = (event) => {
 
 const drop = (event) => {
   event.preventDefault();
-  console.log(event);
   const listEl = event.target.closest(".todo-list");
   if (!listEl) return;
   const targetList = listEl.id.split("Task")[0];
   listEl.classList.remove("drag-active");
-  // event.dataTransfer.effectAllowed = "move";
 
   const todoText = event.dataTransfer.getData("text");
-  console.log(todoText);
   deleteByTextFromLSt(todoText);
-  addTodoToHtml(todoText, targetList);
+  addTodoToHtml({ name: todoText, checked: true }, targetList);
 };
 
 [...document.querySelectorAll(".todo-section")].forEach((list) => {
