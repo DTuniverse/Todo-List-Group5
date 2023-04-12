@@ -123,6 +123,11 @@ h1 {
   margin: 2rem 0;
 }
 
+#incompleteTask,
+#doneTask {
+  min-height: 25vh;
+}
+
 .list-item {
   list-style: none;
   display: flex;
@@ -217,4 +222,18 @@ h1 {
 
 .btn:active {
   transform: translateY(2px);
+}
+
+.hide {
+  display: none;
+}
+
+.drag-active {
+  background-color: var(--color-borders);
+  transition: background-color 0.5s;
+}
+
+.barrier {
+  height: 1rem;
+  width: 100%;
 }
