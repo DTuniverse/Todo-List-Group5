@@ -171,6 +171,10 @@ h1 {
   display: inline-block;
 }
 
+[contenteditable] {
+  outline: 0px solid transparent;
+}
+
 .todo-label::before {
   content: "";
   position: absolute;

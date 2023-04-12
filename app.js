@@ -5,8 +5,21 @@ const todoInput = document.getElementById("newTask");
 const incompleteTaskList = document.getElementById("incompleteTask");
 const editIcon = document.getElementsByClassName("editImage");
 const doneTaskList = document.getElementById("doneTask");
+const clearAllTodosButton = document.querySelector(".btn-clear");
 
 // execute loadtodos function after page loads
+
+clearAllTodosButton.addEventListener("click", () => {
+  window.localStorage.removeItem("todos");
+  loadTodos();
+});
+
+//clear all tasks from html file
+
+const clearHtml = () => {
+  incompleteTaskList.innerHTML = "";
+  doneTaskList.innerHTML = "";
+};
 
 // localStorage.removeItem("todos");
 
@@ -22,13 +35,15 @@ document.addEventListener(
 
 const loadTodos = () => {
   let todos = JSON.parse(window.localStorage.getItem("todos"));
-  console.log("storage:", todos); //ggl
+  // console.log("storage:", todos); //ggl
 
   if (todos) {
     todos.forEach((todo) => {
       // addTodoToHtml(todo.name);
       addTodoToHtml(todo);
     });
+  } else {
+    clearHtml();
   }
 };
 
@@ -38,7 +53,36 @@ document.body.addEventListener("click", (event) => {
   if (event.target.closest(".deleteBtn")) {
     deleteTodo(event);
   }
+
+  if (event.target.type === "checkbox") {
+    afterCheckboxClick(event);
+  }
 });
+
+//after checkbox click function
+
+const afterCheckboxClick = (event) => {
+  const targetName = event.target.nextSibling.textContent;
+  let todos = loadData();
+  const selectedTodo = todos.find((el) => el.name === targetName);
+
+  Promise.all(
+    event.target.parentElement
+      .getAnimations({ subtree: true })
+      .map((animation) => animation.finished)
+  ).then(() => {
+    event.target.closest(".list-item").remove();
+    if (selectedTodo.checked == true) {
+      addTodoToHtml({ ...selectedTodo, checked: false });
+      selectedTodo.checked = false;
+    } else {
+      addTodoToHtml({ ...selectedTodo, checked: true });
+      selectedTodo.checked = true;
+    }
+
+    saveData(todos);
+  });
+};
 
 // eventlistener add todo button
 
@@ -49,11 +93,17 @@ addButton.addEventListener("click", () => {
 //add todo function
 
 const addTodo = () => {
-  //  console.log(todoInput.value)
-  const newTodoObj = addTodoToLocalStorage(todoInput.value);
-  // addTodoToHtml(todoInput.value);
-  addTodoToHtml(newTodoObj);
-  // addTodoToLocalStorage(todoInput.value);
+  if (todoInput.value) {
+    //  console.log(todoInput.value)
+    const newTodoObj = addTodoToLocalStorage(todoInput.value);
+    // addTodoToHtml(todoInput.value);
+    addTodoToHtml(newTodoObj);
+
+    //empty input value after todo is added
+
+    todoInput.value = "";
+    // addTodoToLocalStorage(todoInput.value);
+  }
 };
 
 //add todo to html only
@@ -76,7 +126,7 @@ const addTodoToHtml = (newTodoObj, list = "incomplete") => {
 
   let checkWrapper = document.createElement("div");
   checkWrapper.className = "check-wrapper";
-  checkWrapper.innerHTML = `<input type="checkbox" /><label class="todo-label">${newTodoObj.name}</label>`; //ggl
+  checkWrapper.innerHTML = `<input type="checkbox" checked=${newTodoObj.checked} /><label class="todo-label">${newTodoObj.name}</label>`; //ggl
 
   let buttonWrapper = document.createElement("div");
 
@@ -245,6 +295,7 @@ const setToEditMode = (listItem, todoObj) => {
   //const listItem = this.parentNode;
   const label = listItem.querySelector("label");
   label.setAttribute("contenteditable", "");
+  label.focus();
 
   label.onblur = (event) => {
     // console.log("blur called.", event);
@@ -282,14 +333,14 @@ const saveNameGroup5 = () => {
   let nameGroup5 = myNameInput.innerText;
   window.localStorage.setItem("nameGroup5", nameGroup5);
 };
-myNameInput.addEventListener("mouseout", saveNameGroup5);
+myNameInput.addEventListener("blur", saveNameGroup5);
 if (
   localStorage.nameGroup5 != "undefined" ||
   localStorage.nameGroup5 != "null"
 ) {
-  myNameInput.innerText = localStorage.nameGroup5;
+  myNameInput.innerText = window.localStorage.nameGroup5;
 } else {
   myNameInput.innerText = "my name goes here";
 }
-console.dir(myNameInput.innerText);
+// console.dir(myNameInput.innerText);
 // console.dir(localStorage.name);
