@@ -126,6 +126,9 @@ h1 {
 #incompleteTask,
 #doneTask {
   min-height: 25vh;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  transition: all 0.3s;
 }
 
 .list-item {
