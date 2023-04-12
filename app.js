@@ -216,7 +216,7 @@ const drop = (event) => {
   // find thing in array and update
   const index = todoArray.findIndex((el) => +el.id === +todoID);
   const todoText = todoArray[index].name;
-  todoArray[index].checked = true;
+  todoArray[index].checked = checked;
   saveData(todoArray);
 
   const previousElementsId = addTodoToHtml(
