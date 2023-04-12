@@ -97,24 +97,32 @@ const addTodoToHtml = (newTodoObj, list = "incomplete") => {
   listItem.className = "list-item";
   // Attributes for drag and drop
   listItem.setAttribute("draggable", "true");
-  listItem.dataset.checked = "false";
+  listItem.id = newTodoObj.id;
+
   //
   listItem.appendChild(checkWrapper);
   listItem.appendChild(buttonWrapper);
 
-  document.getElementById(`${list}Task`).appendChild(listItem);
+  document
+    .getElementById(`${newTodoObj.checked ? "done" : "incomplete"}Task`)
+    .appendChild(listItem);
   bindTaskEvents(listItem, newTodoObj); //ggl
 
   listItem.addEventListener("dragstart", handleDragstart);
-  list === "incomplete"
-    ? (listItem.querySelector("input").checked = false)
-    : (listItem.querySelector("input").checked = true);
+
+  newTodoObj.checked
+    ? (listItem.querySelector("input").checked = true)
+    : (listItem.querySelector("input").checked = false);
+
+  // list === "incomplete"
+  //   ? (newTodoObj.checked = false)
+  //   : (newTodoObj.checked = true);
 };
 
 //add todo to local storage only
 
 const addTodoToLocalStorage = (value) => {
-  let obj = { name: value, checked: false };
+  let obj = { name: value, checked: false, id: Date.now() };
 
   let todos = JSON.parse(window.localStorage.getItem("todos"));
 
@@ -167,7 +175,7 @@ const deleteTodoFromLocalStorage = (event) => {
 // Event Handlers
 function handleDragstart(e) {
   e.dataTransfer.clearData();
-  e.dataTransfer.setData("text/plain", e.target.textContent);
+  e.dataTransfer.setData("text/plain", e.target.id);
   setTimeout(() => {
     e.target.classList.add("hide");
   }, 0);
@@ -196,12 +204,25 @@ const drop = (event) => {
   event.preventDefault();
   const listEl = event.target.closest(".todo-list");
   if (!listEl) return;
-  const targetList = listEl.id.split("Task")[0];
   listEl.classList.remove("drag-active");
 
-  const todoText = event.dataTransfer.getData("text");
-  deleteByTextFromLSt(todoText);
-  addTodoToHtml({ name: todoText, checked: true }, targetList);
+  const targetList = listEl.id.split("Task")[0];
+  const checked = targetList === "incomplete" ? false : true;
+  const todoID = event.dataTransfer.getData("text");
+  // deleteByTextFromLSt(todoText);
+
+  let todoArray = loadData();
+
+  // find thing in array and update
+  const index = todoArray.findIndex((el) => +el.id === +todoID);
+  const todoText = todoArray[index].name;
+  todoArray[index].checked = true;
+  saveData(todoArray);
+
+  const previousElementsId = addTodoToHtml(
+    { name: todoText, checked: checked, id: todoID },
+    targetList
+  );
 };
 
 [...document.querySelectorAll(".todo-section")].forEach((list) => {
@@ -237,10 +258,10 @@ const setToEditMode = (listItem, todoObj) => {
 
 const updateItemInLocalStorage = (todoObj, newValue) => {
   // read local storage into array
-  todoArray = loadData();
+  let todoArray = loadData();
 
   // find thing in array and update
-  index = todoArray.findIndex((el) => el.id === todoObj.id);
+  const index = todoArray.findIndex((el) => +el.id === +todoObj.id);
   todoArray[index].name = newValue;
 
   // save the array into local storage
