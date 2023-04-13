@@ -126,6 +126,9 @@ h1 {
 #incompleteTask,
 #doneTask {
   min-height: 25vh;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  transition: all 0.3s;
 }
 
 .list-item {
@@ -181,10 +184,10 @@ h1 {
   top: 55%;
   height: 2px;
   background-color: var(--color-strike);
-  width: 101%;
+  left: -5rem;
+  right: 0;
   transform: translateX(-100%);
-  /* display: none; */
-  transition: transform 0.2s cubic-bezier(0, 1.15, 1, 0.78);
+  transition: transform 0.35s 0.1s cubic-bezier(0.37, -0.37, 0.51, 1.67);
 }
 
 [type="checkbox"] {
